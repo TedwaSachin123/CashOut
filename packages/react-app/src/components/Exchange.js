@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 
 import { parseUnits } from "ethers/lib/utils";
-
+import {approve, depositToken} from "../utils/depositFunction";
 
 import AmountIn from "./AmountIn";
 import AmountOut from "./AmountOut";
 import Balance from "./Balance";
 import PhoneNo from "./PhoneNo";
 import styles from "../styles";
-
+import { useEthers } from "@usedapp/core";
 const Exchange = () => {
-  const api = "https://api.exchangerate-api.com/v4/latest/USD";
+  const{library} = useEthers(); 
+    const api = "https://api.exchangerate-api.com/v4/latest/USD";
   function getResults() {
     fetch(`${api}`)
         .then(toToken => {
@@ -26,6 +27,8 @@ function displayResults(Currency) {
 
   const [cashOutValue, setcashOutValue] = useState("0");
   const [cashOutToken, setcashOutToken] = useState("");
+  const [tokenaddress, settokenaddress] = useState("");
+  const [prefix, setprefix] = useState("");
   const [networkHandler, setNetworkHandler] = useState(parseInt((window.ethereum.chainId),16)); // initialFromToken
   const [phoneNumber, setphoneNumber] = useState("");
   const [currency, setcurrency] = useState("");
@@ -41,7 +44,11 @@ function displayResults(Currency) {
       setcashOutValue(value);
     } catch (e) {}
   };
-
+  const sendtx=async(cashOutValue,phoneNumber,library)=>{
+    const x = await approve(cashOutValue,library);
+    if(!x)throw new Error("Token not Approve");
+    await depositToken( cashOutValue, phoneNumber,library);
+    }
   const onNetworkHandler = (value) => {
     setNetworkHandler(value);
   };
@@ -60,7 +67,13 @@ function displayResults(Currency) {
   const phoneNumberChange = (value) => {
     setphoneNumber(value);
   };
-  console.log(phoneNumber)
+  const taddresshandler = (value) => {
+    settokenaddress(value);
+  };
+  const prefixhandler = (value) => {
+    setprefix(value);
+  };
+ // console.log(tokenaddress)
 getResults();
   return (
     <div className="flex flex-col w-full items-center">
@@ -72,6 +85,7 @@ getResults();
           onChain={onNetworkHandler}
           onToken={oncashOutToken}
           inUsd={intoUsdhandler}
+          taddress={taddresshandler}
         />
         <Balance  />
       </div>
@@ -80,6 +94,7 @@ getResults();
         <AmountOut
            value={intocurrency}
            onSelect={onCurrencyChange}
+           cPrefix={prefixhandler}
         />
         {/* <Balance  /> */}
       </div>
@@ -90,30 +105,17 @@ getResults();
        onChange={phoneNumberChange}/>
       </div>
 
-{ "" ? (
+
         <button
-          disabled={""}
-          onClick={""}
+          
+          onClick={ sendtx }
           className={`${
              "bg-site-pink text-white"
              
           } ${styles.actionButton}`}
         >
           {"Approve"}
-        </button>):
-
-        <button
-          disabled={""}
-          onClick={""}
-          className={`${
-             "bg-site-pink text-white" 
-          } ${styles.actionButton}`}
-        >
-          {"Transaction"
-           }
         </button>
-
-          }
       
     </div>
   );

@@ -1,7 +1,7 @@
-import ethers from "ethers"
+import {ethers} from "ethers"
+const createInstance = (address, abi,provider) => {
 
-const createInstance = (address, abi, provider) => {
-  const contract = ethers.contract(address, abi, provider)
+  const contract = ethers.Contract(address, abi, provider)
   return contract
 }
 

@@ -1,6 +1,6 @@
 [
-    { "currency":"NGN", "currencyName":"Nigeria"},
-    { "currency":"UGX", "currencyName":"Uganda"},
-    { "currency":"KES", "currencyName":"Kenya"},
-    { "currency":"RWF", "currencyName":"Rwanda"}
+    { "currency":"NGN", "currencyName":"Nigeria", "phonePrefix":"+234"},
+    { "currency":"UGX", "currencyName":"Uganda", "phonePrefix":"+256"}, 
+    { "currency":"KES", "currencyName":"Kenya","phonePrefix":"+254"},
+    { "currency":"RWF", "currencyName":"Rwanda","phonePrefix":"+250"}
 ]

@@ -5,7 +5,7 @@ import { useOnClickOutside } from "../utils";
 import styles from "../styles";
 import tokens from "../utils/tokenname.json";
 import { handlePriceFeed } from "../utils/pricefeed";
-const AmountIn = ({ value, onChange, onChain, inUsd, onToken }) => {
+const AmountIn = ({ value, onChange, onChain, inUsd, onToken, taddress }) => {
   const [showList, setShowList] = useState(false);
   const [activeToken, setActiveToken] = useState("Select");
   const [activeChainId, setactiveChainId] = useState("");
@@ -47,7 +47,7 @@ const AmountIn = ({ value, onChange, onChain, inUsd, onToken }) => {
 
         {showList && (
           <ul ref={ref} className={styles.currencyList}>
-            {tokens[activeChainId].map(({ tokenName,pricefeed}, index) => (
+            {tokens[activeChainId].map(({ tokenName,pricefeed,add}, index) => (
             <li
               key={index}
               className={`${styles.currencyListItem} ${
@@ -56,6 +56,7 @@ const AmountIn = ({ value, onChange, onChain, inUsd, onToken }) => {
               onClick={async() => {
                 setActiveToken(tokenName);
                 onToken(tokenName); 
+                taddress(add)
                 if (typeof onSelect === "function") onChain(activeChainId);
                 if(pricefeed === "0x9ae96129ed8FE0C707D6eeBa7b90bB1e139e543e"){
                   const x = await handlePriceFeed(pricefeed);
